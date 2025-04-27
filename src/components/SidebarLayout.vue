@@ -21,25 +21,15 @@
           <span class="menu-text">数据导入</span>
         </li>
         <li class="menu-item">
-          <div class="menu-icon">⚙️</div>
-          <span class="menu-text">清洗规则</span>
-        </li>
-        <li class="menu-item">
-          <div class="menu-icon">🕒</div>
-          <span class="menu-text">任务调度</span>
-        </li>
-        <li class="menu-item">
           <div class="menu-icon">📈</div>
           <span class="menu-text">质量监控</span>
         </li>
-        <li class="menu-item">
-          <div class="menu-icon">✏️</div>
-          <span class="menu-text">数据修正</span>
-        </li>
-        <li class="menu-item">
-          <div class="menu-icon">👁️</div>
-          <span class="menu-text">数据预览</span>
-        </li>
+        <router-link to="/product-quality-management" custom v-slot="{ navigate, isActive }">
+          <li @click="navigate" :class="['menu-item', { active: isActive }]">
+            <div class="menu-icon">🛡️</div>
+            <span class="menu-text">商品质量管理</span>
+          </li>
+        </router-link>
       </ul>
 
       <div class="menu-category">系统管理</div>
@@ -67,6 +57,18 @@
           <li @click="navigate" :class="['menu-item', { active: isActive }]">
             <div class="menu-icon">📄</div>
             <span class="menu-text">订单管理</span>
+          </li>
+        </router-link>
+        <router-link to="/merchant-credit-system" custom v-slot="{ navigate, isActive }">
+          <li @click="navigate" :class="['menu-item', { active: isActive }]">
+            <div class="menu-icon">⭐</div>
+            <span class="menu-text">商家信用评级</span>
+          </li>
+        </router-link>
+        <router-link to="/dispute-management" custom v-slot="{ navigate, isActive }">
+          <li @click="navigate" :class="['menu-item', { active: isActive }]">
+            <div class="menu-icon">⚖️</div>
+            <span class="menu-text">争议与纠纷</span>
           </li>
         </router-link>
         <router-link to="/system-settings" custom v-slot="{ navigate, isActive }">

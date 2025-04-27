@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>闲置优品 - 争议和纠纷处理中心</title>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+  <style>
+      :root {
+          --primary: #3E54AC;
+          --primary-light: #ECF2FF;
+          --success: #4CAF50;
+          --warning: #FF9800;
+          --danger: #F44336;
+          --info: #2196F3;
+          --text: #333333;
+          --text-light: #666666;
+          --border: #E0E0E0;
+          --bg-light: #F9FAFC;
+          --white: #FFFFFF;
+          --shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+          --success-light: #E8F5E9;
+          --warning-light: #FFF3E0;
+          --danger-light: #FFEBEE;
+          --info-light: #E3F2FD;
+      }
+
+      * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+          font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      }
+
+      body {
+          background-color: var(--bg-light);
+          color: var(--text);
+          line-height: 1.6;
+      }
+
+      .container {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 20px;
+      }
+
+      .header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 24px;
+      }
+
+      .header-title {
+          font-size: 22px;
+          font-weight: 600;
+      }
+
+      .page-actions {
+          display: flex;
+          gap: 12px;
+      }
+
+      .btn {
+          padding: 8px 16px;
+          border-radius: 6px;
+          font-size: 14px;
+          font-weight: 500;
+          cursor: pointer;
+          border: none;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          transition: all 0.2s;
+      }
+
+      .btn-primary {
+          background-color: var(--primary);
+          color: white;
+      }
+
+      .btn-success {
+          background-color: var(--success);
+          color: white;
+      }
+
+      .btn-warning {
+          background-color: var(--warning);
+          color: white;
+      }
+
+      .btn-danger {
+          background-color: var(--danger);
+          color: white;
+      }
+
+      .btn-outline {
+          background-color: white;
+          color: var(--primary);
+          border: 1px solid var(--border);
+      }
+
+      .stats-row {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 20px;
+          margin-bottom: 24px;
+      }
+
+      .stat-card {
+          background-color: var(--white);
+          border-radius: 12px;
+          padding: 20px;
+          box-shadow: var(--shadow);
+      }
+
+      .stat-title {
+          font-size: 14px;
+          color: var(--text-light);
+          margin-bottom: 8px;
+      }
+
+      .stat-value {
+          font-size: 24px;
+          font-weight: 600;
+          margin-bottom: 8px;
+      }
+
+      .stat-trend {
+          font-size: 13px;
+          display: flex;
+          align-items: center;
+          gap: 4px;
+      }
+
+      .trend-up {
+          color: var(--danger);
+      }
+
+      .trend-down {
+          color: var(--success);
+      }
+
+      .tab-container {
+          margin-bottom: 24px;
+      }
+
+      .tabs {
+          display: flex;
+          border-bottom: 1px solid var(--border);
+      }
+
+      .tab {
+          padding: 12px 20px;
+          font-size: 14px;
+          font-weight: 500;
+          color: var(--text-light);
+          cursor: pointer;
+          border-bottom: 2px solid transparent;
+          transition: all 0.2s;
+      }
+
+      .tab.active {
+          color: var(--primary);
+          border-bottom: 2px solid var(--primary);
+      }
+
+      .tab-content {
+          padding: 24px 0;
+      }
+
+      .card {
+          background-color: var(--white);
+          border-radius: 12px;
+          box-shadow: var(--shadow);
+          margin-bottom: 24px;
+      }
+
+      .card-header {
+          padding: 16px 20px;
+          border-bottom: 1px solid var(--border);
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+      }
+
+      .card-title {
+          font-size: 16px;
+          font-weight: 600;
+      }
+
+      .card-body {
+          padding: 20px;
+      }
+
+      .filter-row {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 16px;
+          margin-bottom: 20px;
+      }
+
+      .filter-group {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+      }
+
+      .filter-label {
+          font-size: 14px;
+          color: var(--text-light);
+      }
+
+      .filter-select {
+          padding: 8px 12px;
+          border-radius: 6px;
+          border: 1px solid var(--border);
+          background-color: white;
+          font-size: 14px;
+          min-width: 140px;
+      }
+
+      .search-box {
+          display: flex;
+          align-items: center;
+          border: 1px solid var(--border);
+          border-radius: 6px;
+          padding: 8px 12px;
+          flex: 1;
+          max-width: 300px;
+          background-color: white;
+      }
+
+      .search-box input {
+          border: none;
+          outline: none;
+          width: 100%;
+          font-size: 14px;
+          margin-left: 8px;
+      }
+
+      .table {
+          width: 100%;
+          border-collapse: collapse;
+      }
+
+      .table th, .table td {
+          padding: 12px 16px;
+          text-align: left;
+          border-bottom: 1px solid var(--border);
+      }
+
+      .table th {
+          font-weight: 600;
+          font-size: 14px;
+          color: var(--text-light);
+          background-color: var(--bg-light);
+      }
+
+      .table tbody tr:hover {
+          background-color: var(--primary-light);
+      }
+
+      .badge {
+          display: inline-block;
+          padding: 4px 8px;
+          border-radius: 4px;
+          font-size: 12px;
+          font-weight: 500;
+      }
+
+      .badge-success {
+          background-color: var(--success-light);
+          color: var(--success);
+      }
+
+      .badge-warning {
+          background-color: var(--warning-light);
+          color: var(--warning);
+      }
+
+      .badge-danger {
+          background-color: var(--danger-light);
+          color: var(--danger);
+      }
+
+      .badge-info {
+          background-color: var(--info-light);
+          color: var(--info);
+      }
+
+      .badge-primary {
+          background-color: var(--primary-light);
+          color: var(--primary);
+      }
+
+      .user-avatar {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          object-fit: cover;
+      }
+
+      .user-info {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+      }
+
+      .user-name {
+          font-weight: 500;
+      }
+
+      .user-id {
+          font-size: 12px;
+          color: var(--text-light);
+      }
+
+      .product-info {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+      }
+
+      .product-image {
+          width: 48px;
+          height: 48px;
+          border-radius: 8px;
+          object-fit: cover;
+      }
+
+      .product-name {
+          font-weight: 500;
+          margin-bottom: 4px;
+      }
+
+      .product-id {
+          font-size: 12px;
+          color: var(--text-light);
+      }
+
+      .action-buttons {
+          display: flex;
+          gap: 8px;
+      }
+
+      .btn-icon {
+          width: 32px;
+          height: 32px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 4px;
+          border: 1px solid var(--border);
+          color: var(--text-light);
+          background-color: white;
+          cursor: pointer;
+          transition: all 0.2s;
+      }
+
+      .btn-icon:hover {
+          color: var(--primary);
+          border-color: var(--primary);
+      }
+
+      .pagination {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-top: 20px;
+      }
+
+      .page-info {
+          font-size: 14px;
+          color: var(--text-light);
+      }
+
+      .page-buttons {
+          display: flex;
+          gap: 8px;
+      }
+
+      .page-btn {
+          width: 36px;
+          height: 36px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 6px;
+          border: 1px solid var(--border);
+          background-color: white;
+          cursor: pointer;
+          font-size: 14px;
+      }
+
+      .page-btn.active {
+          background-color: var(--primary);
+          color: white;
+          border-color: var(--primary);
+      }
+
+      .timeline {
+          margin-top: 20px;
+          position: relative;
+      }
+
+      .timeline::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 16px;
+          height: 100%;
+          width: 2px;
+          background-color: var(--border);
+      }
+
+      .timeline-item {
+          position: relative;
+          padding-left: 40px;
+          padding-bottom: 24px;
+      }
+
+      .timeline-item:last-child {
+          padding-bottom: 0;
+      }
+
+      .timeline-dot {
+          position: absolute;
+          left: 10px;
+          top: 0;
+          width: 14px;
+          height: 14px;
+          border-radius: 50%;
+          background-color: var(--primary);
+          border: 2px solid white;
+          z-index: 1;
+      }
+
+      .timeline-content {
+          background-color: white;
+          border-radius: 8px;
+          border: 1px solid var(--border);
+          padding: 16px;
+      }
+
+      .timeline-header {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 8px;
+      }
+
+      .timeline-title {
+          font-weight: 600;
+      }
+
+      .timeline-date {
+          font-size: 13px;
+          color: var(--text-light);
+      }
+
+      .timeline-body {
+          font-size: 14px;
+          margin-bottom: 12px;
+      }
+
+      .timeline-footer {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          font-size: 13px;
+          color: var(--text-light);
+      }
+
+      .evidence-gallery {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 16px;
+          margin-top: 16px;
+      }
+
+      .evidence-item {
+          width: calc(25% - 12px);
+          position: relative;
+      }
+
+      .evidence-image {
+          width: 100%;
+          height: 120px;
+          object-fit: cover;
+          border-radius: 8px;
+          border: 1px solid var(--border);
+      }
+
+      .evidence-actions {
+          position: absolute;
+          top: 8px;
+          right: 8px;
+          display: flex;
+          gap: 4px;
+      }
+
+      .evidence-action {
+          width: 28px;
+          height: 28px;
+          border-radius: 4px;
+          background-color: rgba(0, 0, 0, 0.5);
+          color: white;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: all 0.2s;
+      }
+
+      .evidence-action:hover {
+          background-color: rgba(0, 0, 0, 0.7);
+      }
+
+      .dispute-details {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 24px;
+      }
+
+      .dispute-section {
+          margin-bottom: 24px;
+      }
+
+      .section-title {
+          font-size: 16px;
+          font-weight: 600;
+          margin-bottom: 16px;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+      }
+
+      .section-icon {
+          color: var(--primary);
+      }
+
+      .info-row {
+          display: flex;
+          margin-bottom: 12px;
+      }
+
+      .info-label {
+          width: 120px;
+          font-weight: 500;
+          color: var(--text-light);
+      }
+
+      .info-value {
+          flex: 1;
+      }
+
+      .status-steps {
+          display: flex;
+          justify-content: space-between;
+          margin: 32px 0;
+          position: relative;
+      }
+
+      .status-steps::before {
+          content: '';
+          position: absolute;
+          top: 16px;
+          left: 0;
+          width: 100%;
+          height: 2px;
+          background-color: var(--border);
+          z-index: 0;
+      }
+
+      .step {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          position: relative;
+          z-index: 1;
+      }
+
+      .step-circle {
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          background-color: white;
+          border: 2px solid var(--border);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 600;
+          margin-bottom: 8px;
+      }
+
+      .step.active .step-circle {
+          background-color: var(--primary);
+          color: white;
+          border-color: var(--primary);
+      }
+
+      .step.completed .step-circle {
+          background-color: var(--success);
+          color: white;
+          border-color: var(--success);
+      }
+
+      .step-label {
+          font-size: 13px;
+          font-weight: 500;
+          text-align: center;
+          max-width: 120px;
+      }
+
+      .form-row {
+          margin-bottom: 20px;
+      }
+
+      .form-label {
+          display: block;
+          font-weight: 500;
+          margin-bottom: 8px;
+      }
+
+      .form-input {
+          width: 100%;
+          padding: 10px 12px;
+          border-radius: 6px;
+          border: 1px solid var(--border);
+          font-size: 14px;
+      }
+
+      .form-textarea {
+          width: 100%;
+          padding: 10px 12px;
+          border-radius: 6px;
+          border: 1px solid var(--border);
+          font-size: 14px;
+          resize: vertical;
+          min-height: 100px;
+      }
+
+      .form-select {
+          width: 100%;
+          padding: 10px 12px;
+          border-radius: 6px;
+          border: 1px solid var(--border);
+          font-size: 14px;
+          background-color: white;
+      }
+
+      .form-actions {
+          display: flex;
+          justify-content: flex-end;
+          gap: 12px;
+          margin-top: 24px;
+      }
+
+      .tags {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+      }
+
+      .tag {
+          padding: 4px 8px;
+          border-radius: 4px;
+          background-color: var(--primary-light);
+          color: var(--primary);
+          font-size: 12px;
+          font-weight: 500;
+      }
+
+      .comparison-container {
+          display: flex;
+          gap: 24px;
+          margin-top: 16px;
+      }
+
+      .comparison-col {
+          flex: 1;
+          background-color: var(--bg-light);
+          border-radius: 8px;
+          padding: 16px;
+      }
+
+      .comparison-title {
+          font-weight: 600;
+          margin-bottom: 12px;
+          padding-bottom: 8px;
+          border-bottom: 1px solid var(--border);
+          text-align: center;
+      }
+
+      .grid-stats {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 16px;
+          margin-bottom: 24px;
+      }
+
+      .stat-box {
+          background-color: white;
+          border-radius: 8px;
+          padding: 16px;
+          box-shadow: var(--shadow);
+          text-align: center;
+      }
+
+      .stat-box-title {
+          font-size: 14px;
+          color: var(--text-light);
+          margin-bottom: 8px;
+      }
+
+      .stat-box-value {
+          font-size: 24px;
+          font-weight: 600;
+      }
+
+      .chart-container {
+          height: 240px;
+          margin-bottom: 24px;
+          background-color: white;
+          border-radius: 8px;
+          padding: 16px;
+          box-shadow: var(--shadow);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+      }
+
+      .chart-placeholder {
+          width: 100%;
+          height: 100%;
+          background-color: var(--primary-light);
+          border-radius: 4px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          color: var(--primary);
+          font-weight: 500;
+      }
+
+      .decision-card {
+          background-color: white;
+          border-radius: 8px;
+          box-shadow: var(--shadow);
+          padding: 16px;
+          margin-bottom: 16px;
+      }
+
+      .decision-header {
+          font-weight: 600;
+          margin-bottom: 12px;
+          padding-bottom: 8px;
+          border-bottom: 1px solid var(--border);
+      }
+
+      .decision-options {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+      }
+
+      .decision-option {
+          display: flex;
+          align-items: center;
+          padding: 8px;
+          border-radius: 4px;
+          cursor: pointer;
+          transition: all 0.2s;
+      }
+
+      .decision-option:hover {
+          background-color: var(--primary-light);
+      }
+
+      .decision-option.selected {
+          background-color: var(--primary-light);
+          border: 1px solid var(--primary);
+      }
+
+      .option-radio {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          border: 2px solid var(--border);
+          margin-right: 12px;
+      }
+
+      .option-radio.selected {
+          border-color: var(--primary);
+      }
+
+      .option-radio.selected::after {
+          content: '';
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          background-color: var(--primary);
+      }
+
+      .option-text {
+          flex: 1;
+      }
+
+      .option-title {
+          font-weight: 500;
+          margin-bottom: 4px;
+      }
+
+      .option-desc {
+          font-size: 13px;
+          color: var(--text-light);
+      }
+
+      .file-upload {
+          background-color: var(--bg-light);
+          border: 2px dashed var(--border);
+          border-radius: 8px;
+          padding: 24px;
+          text-align: center;
+          margin-bottom: 16px;
+          cursor: pointer;
+      }
+
+      .upload-icon {
+          font-size: 32px;
+          color: var(--primary);
+          margin-bottom: 12px;
+      }
+
+      .upload-text {
+          font-size: 14px;
+          margin-bottom: 8px;
+      }
+
+      .upload-help {
+          font-size: 12px;
+          color: var(--text-light);
+      }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="header-title">争议和纠纷处理中心</div>
+    <div class="page-actions">
+      <button class="btn btn-outline">
+        <i class="ri-file-chart-line"></i>
+        纠纷统计报告
+      </button>
+      <button class="btn btn-primary">
+        <i class="ri-settings-4-line"></i>
+        纠纷处理规则设置
+      </button>
+    </div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-title">待处理纠纷</div>
+      <div class="stat-value">42</div>
+      <div class="stat-trend trend-up">
+        <i class="ri-arrow-up-line"></i>
+        <span>较昨日 +8</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-title">已解决纠纷</div>
+      <div class="stat-value">1,247</div>
+      <div class="stat-trend trend-up">
+        <i class="ri-arrow-up-line"></i>
+        <span>较昨日 +16</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-title">平均解决时间</div>
+      <div class="stat-value">1.8天</div>
+      <div class="stat-trend trend-down">
+        <i class="ri-arrow-down-line"></i>
+        <span>较上月 -0.3天</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-title">纠纷解决率</div>
+      <div class="stat-value">94.7%</div>
+      <div class="stat-trend trend-up">
+        <i class="ri-arrow-up-line"></i>
+        <span>较上月 +1.2%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-container">
+    <div class="tabs">
+      <div class="tab active">纠纷列表</div>
+      <div class="tab">举证材料管理</div>
+      <div class="tab">退款/换货管理</div>
+      <div class="tab">调解记录</div>
+      <div class="tab">仲裁决策</div>
+    </div>
+
+    <div class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">争议纠纷列表</div>
+        </div>
+        <div class="card-body">
+          <div class="filter-row">
+            <div class="filter-group">
+              <div class="filter-label">纠纷类型：</div>
+              <select class="filter-select">
+                <option>全部类型</option>
+                <option>商品品相不符</option>
+                <option>配件缺失</option>
+                <option>邮寄损坏</option>
+                <option>功能异常</option>
+                <option>未按时发货</option>
+                <option>其他原因</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <div class="filter-label">状态：</div>
+              <select class="filter-select">
+                <option>全部状态</option>
+                <option>待受理</option>
+                <option>举证中</option>
+                <option>协商中</option>
+                <option>退款处理</option>
+                <option>换货处理</option>
+                <option>仲裁中</option>
+                <option>已解决</option>
+                <option>已关闭</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <div class="filter-label">提出时间：</div>
+              <select class="filter-select">
+                <option>全部时间</option>
+                <option>今天</option>
+                <option>昨天</option>
+                <option>近7天</option>
+                <option>近30天</option>
+              </select>
+            </div>
+            <div class="search-box">
+              <i class="ri-search-line"></i>
+              <input type="text" placeholder="搜索订单编号/用户名">
+            </div>
+          </div>
+
+          <table class="table">
+            <thead>
+            <tr>
+              <th width="60">编号</th>
+              <th width="200">商品信息</th>
+              <th width="120">买家</th>
+              <th width="120">卖家</th>
+              <th width="140">纠纷类型</th>
+              <th width="120">状态</th>
+              <th width="120">提交时间</th>
+              <th width="100">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>#D2308</td>
+              <td>
+                <div class="product-info">
+                  <img src="https://placehold.co/48x48" class="product-image" alt="商品图片">
+                  <div>
+                    <div class="product-name">iPhone 13 Pro 256GB 海蓝色</div>
+                    <div class="product-id">订单号: O2023082401</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="user-info">
+                  <img src="https://placehold.co/40x40" class="user-avatar" alt="买家头像">
+                  <div>
+                    <div class="user-name">张小明</div>
+                    <div class="user-id">ID: U78945</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="user-info">
+                  <img src="https://placehold.co/40x40" class="user-avatar" alt="卖家头像">
+                  <div>
+                    <div class="user-name">数码优品店</div>
+                    <div class="user-id">ID: S12345</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="badge badge-warning">商品品相不符</span></td>
+              <td><span class="badge badge-info">举证中</span></td>
+              <td>2023-08-24 14:32</td>
+              <td>
+                <div class="action-buttons">
+                  <button class="btn-icon"><i class="ri-eye-line"></i></button>
+                  <button class="btn-icon"><i class="ri-chat-3-line"></i></button>
+                  <button class="btn-icon"><i class="ri-more-2-fill"></i></button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>#D2307</td>
+              <td>
+                <div class="product-info">
+                  <img src="https://placehold.co/48x48" class="product-image" alt="商品图片">
+                  <div>
+                    <div class="product-name">戴森吸尘器 V11 紫色</div>
+                    <div class="product-id">订单号: O2023082305</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="user-info">
+                  <img src="https://placehold.co/40x40" class="user-avatar" alt="买家头像">
+                  <div>
+                    <div class="user-name">李华</div>
+                    <div class="user-id">ID: U65432</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="user-info">
+                  <img src="https://placehold.co/40x40" class="user-avatar" alt="卖家头像">
+                  <div>
+                    <div class="user-name">优选家电</div>
+                    <div class="user-id">ID: S45678</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="badge badge-danger">配件缺失</span></td>
+              <td><span class="badge badge-primary">协商中</span></td>
+              <td>2023-08-23 09:15</td>
+              <td>
+                <div class="action-buttons">
+                  <button class="btn-icon"><i class="ri-eye-line"></i></button>
+                  <button class="btn-icon"><i class="ri-chat-3-line"></i></button>
+                  <button class="btn-icon"><i class="ri-more-2-fill"></i></button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>#D2306</td>
+              <td>
+                <div class="product-info">
+                  <img src="https://placehold.co/48x48" class="product-image" alt="商品图片">
+                  <div>
+                    <div class="product-name">Nike Air Force 1 '07 白色 42码</div>
+                    <div class="product-id">订单号: O2023082201</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="user-info">
+                  <img src="https://placehold.co/40x40" class="user-avatar" alt="买家头像">
+                  <div>
+                    <div class="user-name">王军</div>
+                    <div class="user-id">ID: U23456</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="user-info">
+                  <img src="https://placehold.co/40x40" class="user-avatar" alt="卖家头像">
+                  <div>
+                    <div class="user-name">潮流鞋坊</div>
+                    <div class="user-id">ID: S56789</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="badge badge-warning">邮寄损坏</span></td>
+              <td><span class="badge badge-warning">退款处理</span></td>
+              <td>2023-08-22 16:48</td>
+              <td>
+                <div class="action-buttons">
+                  <button class="btn-icon"><i class="ri-eye-line"></i></button>
+                  <button class="btn-icon"><i class="ri-chat-3-line"></i></button>
+                  <button class="btn-icon"><i class="ri-more-2-fill"></i></button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>#D2305</td>
+              <td>
+                <div class="product-info">
+                  <img src="https://placehold.co/48x48" class="product-image" alt="商品图片">
+                  <div>
+                    <div class="product-name">索尼 WH-1000XM4 耳机 黑色</div>
+                    <div class="product-id">订单号: O2023082108</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="user-info">
+                  <img src="https://placehold.co/40x40" class="user-avatar" alt="买家头像">
+                  <div>
+                    <div class="user-name">赵丽</div>
+                    <div class="user-id">ID: U34567</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="user-info">
+                  <img src="https://placehold.co/40x40" class="user-avatar" alt="卖家头像">
+                  <div>
+                    <div class="user-name">音频天地</div>
+                    <div class="user-id">ID: S67890</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="badge badge-danger">功能异常</span></td>
+              <td><span class="badge badge-danger">仲裁中</span></td>
+              <td>2023-08-21 11:27</td>
+              <td>
+                <div class="action-buttons">
+                  <button class="btn-icon"><i class="ri-eye-line"></i></button>
+                  <button class="btn-icon"><i class="ri-chat-3-line"></i></button>
+                  <button class="btn-icon"><i class="ri-more-2-fill"></i></button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>#D2304</td>
+              <td>
+                <div class="product-info">
+                  <img src="https://placehold.co/48x48" class="product-image" alt="商品图片">
+                  <div>
+                    <div class="product-name">Nintendo Switch OLED 白色</div>
+                    <div class="product-id">订单号: O2023082003</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="user-info">
+                  <img src="https://placehold.co/40x40" class="user-avatar" alt="买家头像">
+                  <div>
+                    <div class="user-name">陈明</div>
+                    <div class="user-id">ID: U45678</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="user-info">

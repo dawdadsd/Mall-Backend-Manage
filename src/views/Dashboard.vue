@@ -1,135 +1,215 @@
 <template>
   <div class="dashboard">
-    <!-- 统计卡片 -->
-    <div class="stats-cards">
-      <el-card class="stats-card">
-        <div class="card-header">本周清洗任务</div>
-        <div class="card-value">1,284</div>
-        <div class="card-change increase">
-          ↑ 12% 增长
-        </div>
-      </el-card>
-
-      <el-card class="stats-card">
-        <div class="card-header">清洗成功率</div>
-        <div class="card-value">98.6%</div>
-        <div class="card-change increase">
-          ↑ 2.3% 增长
-        </div>
-      </el-card>
-
-      <el-card class="stats-card">
-        <div class="card-header">异常数据</div>
-        <div class="card-value">36</div>
-        <div class="card-change decrease">
-          ↑ 4% 增长
-        </div>
-      </el-card>
-    </div>
-
-    <!-- 图表区域 -->
-    <div class="charts-section">
-      <el-card class="chart-card trend-chart">
-        <div class="chart-header">
-          <div class="chart-title">数据清洗趋势</div>
-          <div class="chart-actions">
-            <el-radio-group v-model="timeRange" size="small">
-              <el-radio-button label="周">周</el-radio-button>
-              <el-radio-button label="月">月</el-radio-button>
-              <el-radio-button label="年">年</el-radio-button>
-            </el-radio-group>
+    <!-- Top Stats Cards -->
+    <el-row :gutter="20" class="stats-row">
+      <el-col :xs="24" :sm="12" :md="6">
+        <el-card shadow="never" class="stat-card">
+          <div class="stat-title">总商品数</div>
+          <div class="stat-value">{{ overviewStats.totalProducts.toLocaleString() }}</div>
+          <div :class="['stat-trend', overviewStats.newProductsToday > 0 ? 'trend-up' : '']">
+            <el-icon v-if="overviewStats.newProductsToday > 0"><Top /></el-icon>
+            今日新增 {{ overviewStats.newProductsToday }}
           </div>
-        </div>
-        <div class="chart-container" ref="trendChartRef" />
-      </el-card>
-
-      <el-card class="chart-card quality-chart">
-        <div class="chart-header">
-          <div class="chart-title">数据质量分布</div>
-          <div class="chart-actions">
-            <el-button size="small" type="primary" plain>导出报告</el-button>
+        </el-card>
+      </el-col>
+      <el-col :xs="24" :sm="12" :md="6">
+        <el-card shadow="never" class="stat-card">
+          <div class="stat-title">总用户/商家数</div>
+          <div class="stat-value">{{ overviewStats.totalUsers.toLocaleString() }}</div>
+           <div :class="['stat-trend', overviewStats.newUsersToday > 0 ? 'trend-up' : '']">
+             <el-icon v-if="overviewStats.newUsersToday > 0"><Top /></el-icon>
+            今日新增 {{ overviewStats.newUsersToday }}
+           </div>
+        </el-card>
+      </el-col>
+      <el-col :xs="24" :sm="12" :md="6">
+        <el-card shadow="never" class="stat-card">
+          <div class="stat-title">今日订单数</div>
+          <div class="stat-value">{{ overviewStats.todayOrders.toLocaleString() }}</div>
+           <div :class="['stat-trend', overviewStats.orderChangePercent !== 0 ? (overviewStats.orderChangePercent > 0 ? 'trend-up' : 'trend-down') : '']">
+              <el-icon v-if="overviewStats.orderChangePercent > 0"><Top /></el-icon>
+              <el-icon v-else-if="overviewStats.orderChangePercent < 0"><Bottom /></el-icon>
+              {{ overviewStats.orderChangePercent > 0 ? '↑' : (overviewStats.orderChangePercent < 0 ? '↓' : '') }} {{ Math.abs(overviewStats.orderChangePercent) }}% vs 昨日
+           </div>
+        </el-card>
+      </el-col>
+      <el-col :xs="24" :sm="12" :md="6">
+        <el-card shadow="never" class="stat-card">
+          <div class="stat-title">待处理事项</div>
+          <div class="stat-value">{{ overviewStats.pendingItems }}</div>
+          <div class="stat-trend" style="font-size: 12px; color: #909399;">
+            (商品审核, 纠纷, 清洗任务)
           </div>
-        </div>
-        <div class="chart-container" ref="qualityChartRef" />
-      </el-card>
-    </div>
+        </el-card>
+      </el-col>
+    </el-row>
 
-    <!-- 最近任务 -->
-    <div class="recent-tasks-section">
-      <div class="section-header">
-        <div class="section-title">最近任务</div>
-        <el-button type="primary">
-          ➕ 新建任务
-        </el-button>
-      </div>
+    <!-- Charts Section -->
+    <el-row :gutter="20" class="charts-section">
+      <el-col :xs="24" :md="12">
+        <el-card shadow="never" class="chart-card">
+          <div class="card-header">
+            <span>商品分类分布</span>
+          </div>
+          <div class="chart-container" ref="categoryChartRef" />
+        </el-card>
+      </el-col>
+      <el-col :xs="24" :md="12">
+        <el-card shadow="never" class="chart-card">
+           <div class="card-header">
+            <span>近7日活跃用户/商家</span>
+          </div>
+          <div class="chart-container" ref="activityChartRef" />
+        </el-card>
+      </el-col>
+    </el-row>
 
-      <el-table :data="recentTasks" style="width: 100%">
-        <el-table-column prop="name" label="任务名称" />
-        <el-table-column prop="startTime" label="开始时间" width="180" />
-        <el-table-column prop="endTime" label="结束时间" width="180" />
-        <el-table-column prop="status" label="状态" width="120">
-          <template #default="scope">
-            <el-tag :type="getStatusType(scope.row.status)">
-              {{ scope.row.status }}
-            </el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" width="150">
-          <template #default>
-            <el-button link type="primary" size="small">查看</el-button>
-            <el-button link type="primary" size="small">编辑</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-    </div>
+    <!-- Recent Listings & Cleaning Brief -->
+     <el-row :gutter="20" class="list-section">
+       <el-col :xs="24" :md="16">
+         <el-card shadow="never">
+           <template #header>
+              <div class="card-header">
+                <span>最近上新商品</span>
+                <el-button type="primary" link>查看全部</el-button>
+              </div>
+            </template>
+            <el-table :data="recentProducts" style="width: 100%">
+              <el-table-column label="商品图" width="70">
+                 <template #default="{ row }">
+                    <el-image :src="row.image" fit="cover" style="width: 40px; height: 40px; border-radius: 4px;" />
+                 </template>
+              </el-table-column>
+              <el-table-column prop="name" label="名称" show-overflow-tooltip />
+              <el-table-column prop="category" label="分类" width="100" />
+              <el-table-column prop="price" label="价格" width="100">
+                 <template #default="{ row }">￥{{ row.price.toFixed(2) }}</template>
+              </el-table-column>
+              <el-table-column prop="seller" label="卖家" width="120" />
+              <el-table-column prop="time" label="上架时间" width="160" />
+            </el-table>
+         </el-card>
+       </el-col>
+       <el-col :xs="24" :md="8">
+          <el-card shadow="never">
+             <template #header>
+                <div class="card-header">
+                  <span>数据清洗简报</span>
+                </div>
+              </template>
+              <div class="cleaning-brief">
+                 <div class="brief-item">
+                    <span class="brief-label">待处理任务:</span>
+                    <span class="brief-value danger">{{ cleaningBrief.pendingTasks }}</span>
+                 </div>
+                 <div class="brief-item">
+                    <span class="brief-label">今日成功率:</span>
+                    <span class="brief-value success">{{ cleaningBrief.successRate }}%</span>
+                 </div>
+                 <div class="brief-item">
+                    <span class="brief-label">今日异常数据:</span>
+                    <span class="brief-value warning">{{ cleaningBrief.errorCount }}</span>
+                 </div>
+                  <el-button type="primary" plain style="width: 100%; margin-top: 15px;">查看清洗中心</el-button>
+              </div>
+          </el-card>
+       </el-col>
+     </el-row>
+
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, reactive, onMounted, nextTick } from 'vue';
 import * as echarts from 'echarts';
+import { Top, Bottom } from '@element-plus/icons-vue';
 
-const timeRange = ref('周');
-const trendChartRef = ref<HTMLElement | null>(null);
-const qualityChartRef = ref<HTMLElement | null>(null);
+// --- Refs for Charts ---
+const categoryChartRef = ref<HTMLElement | null>(null);
+const activityChartRef = ref<HTMLElement | null>(null);
 
-const recentTasks = ref([
-  {
-    name: '商品数据批量清洗',
-    startTime: '2025-04-25 10:30:00',
-    endTime: '2025-04-25 11:45:20',
-    status: '已完成'
-  },
-  {
-    name: '淘宝数据爬取与清洗',
-    startTime: '2025-04-26 09:15:00',
-    endTime: '-',
-    status: '进行中'
-  }
+// --- Mock Data ---
+const overviewStats = reactive({
+  totalProducts: 8590,
+  newProductsToday: 58,
+  totalUsers: 2485,
+  newUsersToday: 12,
+  todayOrders: 128,
+  orderChangePercent: 21.5,
+  pendingItems: 42 + 38 // Example: pending reviews + pending disputes
+});
+
+const recentProducts = ref([
+  { id: 'P001', name: 'Apple MacBook Air M2 13英寸 深空灰', category: '数码电子', price: 8999.00, seller: 'Apple官方店', time: '2025-04-27 10:30', image: 'https://placehold.co/40x40/AAB8C2/FFF?text=MB' },
+  { id: 'P002', name: '夏季纯棉印花T恤 白色 L码', category: '服装鞋包', price: 129.00, seller: '潮流前线', time: '2025-04-27 09:15', image: 'https://placehold.co/40x40/FFFFFF/000?text=T' },
+  { id: 'P003', name: '北欧风实木餐边柜 原木色', category: '家居家具', price: 1580.00, seller: '温馨家居', time: '2025-04-26 18:05', image: 'https://placehold.co/40x40/D2B48C/FFF?text=CB' },
+  { id: 'P004', name: '索尼 Alpha 7 IV 全画幅微单相机', category: '数码电子', price: 16999.00, seller: '摄影器材专营', time: '2025-04-26 15:20', image: 'https://placehold.co/40x40/000000/FFF?text=SN' },
 ]);
 
-const getStatusType = (status: string) => {
-  const statusMap: Record<string, string> = {
-    '已完成': 'success',
-    '进行中': 'primary',
-    '失败': 'danger',
-    '等待中': 'info'
+const cleaningBrief = reactive({
+  pendingTasks: 5,
+  successRate: 98.6,
+  errorCount: 12
+});
+
+// --- Chart Initialization Functions ---
+
+const initCategoryChart = () => {
+  if (!categoryChartRef.value) return;
+  const chart = echarts.init(categoryChartRef.value);
+  const option = {
+    tooltip: {
+      trigger: 'item',
+      formatter: '{b}: {c} ({d}%)'
+    },
+    legend: {
+      bottom: '5%',
+      left: 'center',
+      data: ['数码电子', '服装鞋包', '家居家具', '美妆护肤', '图书音像', '其他'] // Example categories
+    },
+    series: [
+      {
+        name: '商品分类',
+        type: 'pie',
+        radius: ['45%', '70%'],
+        center: ['50%', '45%'], // Adjust center to make space for legend
+        avoidLabelOverlap: false,
+        itemStyle: {
+          borderRadius: 8,
+          borderColor: '#fff',
+          borderWidth: 2
+        },
+        label: { show: false },
+        emphasis: {
+          label: { show: false }
+        },
+        labelLine: { show: false },
+        data: [
+          { value: 3350, name: '数码电子' },
+          { value: 2100, name: '服装鞋包' },
+          { value: 1540, name: '家居家具' },
+          { value: 880, name: '美妆护肤' },
+          { value: 420, name: '图书音像' },
+          { value: 300, name: '其他' }
+        ],
+         color: ['#3E54AC', '#655DBB', '#FF9800', '#4CAF50', '#F44336', '#909399']
+      }
+    ]
   };
-  return statusMap[status] || 'info';
+  chart.setOption(option);
+   window.addEventListener('resize', () => chart.resize());
 };
 
-// 初始化趋势图表
-const initTrendChart = () => {
-  if (!trendChartRef.value) return;
-
-  const chart = echarts.init(trendChartRef.value);
-
+const initActivityChart = () => {
+  if (!activityChartRef.value) return;
+  const chart = echarts.init(activityChartRef.value);
   const option = {
     tooltip: {
       trigger: 'axis'
     },
     legend: {
-      data: ['清洗任务数', '异常数据量']
+      data: ['活跃用户', '活跃商家'],
+       top: '5%'
     },
     grid: {
       left: '3%',
@@ -140,215 +220,151 @@ const initTrendChart = () => {
     xAxis: {
       type: 'category',
       boundaryGap: false,
-      data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+      data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'] // Example: last 7 days
     },
     yAxis: {
       type: 'value'
     },
     series: [
       {
-        name: '清洗任务数',
+        name: '活跃用户',
         type: 'line',
-        data: [150, 230, 224, 218, 135, 147, 260],
+        data: [820, 932, 901, 934, 1290, 1330, 1320],
         smooth: true,
-        lineStyle: {
-          width: 3,
-          color: '#409EFF'
-        },
-        areaStyle: {
-          color: {
-            type: 'linear',
-            x: 0,
-            y: 0,
-            x2: 0,
-            y2: 1,
-            colorStops: [
-              {
-                offset: 0,
-                color: 'rgba(64, 158, 255, 0.2)'
-              },
-              {
-                offset: 1,
-                color: 'rgba(64, 158, 255, 0)'
-              }
-            ]
-          }
-        }
+        itemStyle: { color: '#409EFF' }
       },
       {
-        name: '异常数据量',
+        name: '活跃商家',
         type: 'line',
-        data: [5, 8, 3, 12, 6, 2, 10],
+        data: [320, 382, 351, 374, 590, 610, 600],
         smooth: true,
-        lineStyle: {
-          width: 3,
-          color: '#F56C6C'
-        }
+         itemStyle: { color: '#67C23A' }
       }
     ]
   };
-
   chart.setOption(option);
-
-  window.addEventListener('resize', () => {
-    chart.resize();
-  });
+  window.addEventListener('resize', () => chart.resize());
 };
 
-// 初始化质量图表
-const initQualityChart = () => {
-  if (!qualityChartRef.value) return;
-
-  const chart = echarts.init(qualityChartRef.value);
-
-  const option = {
-    tooltip: {
-      trigger: 'item',
-      formatter: '{a} <br/>{b}: {c} ({d}%)'
-    },
-    legend: {
-      orient: 'vertical',
-      right: 10,
-      top: 'center',
-      data: ['优质数据', '良好数据', '一般数据', '差质数据', '无效数据']
-    },
-    series: [
-      {
-        name: '数据质量',
-        type: 'pie',
-        radius: ['40%', '70%'],
-        avoidLabelOverlap: false,
-        itemStyle: {
-          borderRadius: 10,
-          borderColor: '#fff',
-          borderWidth: 2
-        },
-        label: {
-          show: false,
-          position: 'center'
-        },
-        emphasis: {
-          label: {
-            show: true,
-            fontSize: 16,
-            fontWeight: 'bold'
-          }
-        },
-        labelLine: {
-          show: false
-        },
-        data: [
-          { value: 735, name: '优质数据', itemStyle: { color: '#67C23A' } },
-          { value: 580, name: '良好数据', itemStyle: { color: '#409EFF' } },
-          { value: 300, name: '一般数据', itemStyle: { color: '#E6A23C' } },
-          { value: 150, name: '差质数据', itemStyle: { color: '#F56C6C' } },
-          { value: 50, name: '无效数据', itemStyle: { color: '#909399' } }
-        ]
-      }
-    ]
-  };
-
-  chart.setOption(option);
-
-  window.addEventListener('resize', () => {
-    chart.resize();
-  });
-};
-
+// --- Lifecycle Hook ---
 onMounted(() => {
-  initTrendChart();
-  initQualityChart();
+  nextTick(() => { // Ensure DOM is ready
+    initCategoryChart();
+    initActivityChart();
+  });
 });
+
 </script>
 
 <style scoped>
 .dashboard {
-  width: 100%;
+  padding: 20px;
 }
 
-.stats-cards {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+.stats-row {
   margin-bottom: 20px;
 }
 
-.stats-card {
+.stat-card {
+  border: none;
   border-radius: 8px;
 }
 
-.card-header {
+.stat-title {
+  color: #888888;
   font-size: 14px;
-  color: #606266;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
-.card-value {
-  font-size: 28px;
-  font-weight: 600;
-  color: #303133;
-  margin-bottom: 10px;
+.stat-value {
+  font-size: 26px;
+  font-weight: bold;
+  color: #333333;
+  margin-bottom: 8px;
 }
 
-.card-change {
+.stat-trend {
   display: flex;
   align-items: center;
-  font-size: 12px;
+  font-size: 13px;
+  gap: 4px;
 }
 
-.card-change.increase {
-  color: #67C23A;
-}
-
-.card-change.decrease {
-  color: #F56C6C;
-}
+.trend-up { color: var(--el-color-success); }
+.trend-down { color: var(--el-color-danger); }
 
 .charts-section {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 20px;
   margin-bottom: 20px;
 }
 
 .chart-card {
-  border-radius: 8px;
+   border: none;
+   border-radius: 8px;
+   height: 350px; /* Ensure cards have same height */
+   display: flex;
+   flex-direction: column;
 }
 
-.chart-header {
+.card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
-}
-
-.chart-title {
   font-size: 16px;
-  font-weight: 500;
-  color: #303133;
+  font-weight: 600;
 }
 
 .chart-container {
-  height: 300px;
+  flex-grow: 1;
+  height: calc(100% - 40px); /* Adjust based on header/padding */
+  width: 100%;
 }
 
-.recent-tasks-section {
-  background-color: white;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+.list-section {
+   margin-bottom: 20px;
 }
 
-.section-header {
+.list-section .el-card {
+    border: none;
+    border-radius: 8px;
+}
+
+.el-table :deep(th) {
+  background-color: #f8f9fc !important;
+  font-weight: 500;
+  color: #888888;
+}
+
+.el-table :deep(td), .el-table :deep(th) {
+   padding: 10px 0;
+   vertical-align: middle;
+}
+
+.cleaning-brief {
+  font-size: 14px;
+}
+
+.brief-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f2f5;
 }
 
-.section-title {
-  font-size: 16px;
-  font-weight: 500;
-  color: #303133;
+.brief-item:last-child {
+  border-bottom: none;
 }
+
+.brief-label {
+  color: #666;
+}
+
+.brief-value {
+  font-weight: 600;
+}
+
+.brief-value.danger { color: var(--el-color-danger); }
+.brief-value.warning { color: var(--el-color-warning); }
+.brief-value.success { color: var(--el-color-success); }
+
 </style>

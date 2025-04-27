@@ -8,6 +8,9 @@ import RoleManagement from '../views/RoleManagement.vue';
 import SystemSettings from '../views/SystemSettings.vue';
 import ProductManagement from '../views/ProductManagement.vue';
 import OrderManagement from '../views/OrderManagement.vue';
+import ProductQualityManagement from '../views/ProductQualityManagement.vue';
+import MerchantCreditSystem from '../views/MerchantCreditSystem.vue';
+import DisputeManagement from '../views/DisputeManagement.vue';
 
 const routes = [
   {
@@ -39,6 +42,24 @@ const routes = [
     name: 'OrderManagement',
     component: OrderManagement,
     meta: { title: '订单管理' }
+  },
+  {
+    path: '/product-quality-management',
+    name: 'ProductQualityManagement',
+    component: ProductQualityManagement,
+    meta: { title: '商品质量管理' }
+  },
+  {
+    path: '/merchant-credit-system',
+    name: 'MerchantCreditSystem',
+    component: MerchantCreditSystem,
+    meta: { title: '商家信用评级' }
+  },
+  {
+    path: '/dispute-management',
+    name: 'DisputeManagement',
+    component: DisputeManagement,
+    meta: { title: '争议与纠纷' }
   },
   {
     path: '/system-settings',
