@@ -57,6 +57,12 @@
             <span class="menu-text">角色管理</span>
           </li>
         </router-link>
+        <router-link to="/product-management" custom v-slot="{ navigate, isActive }">
+          <li @click="navigate" :class="['menu-item', { active: isActive }]">
+            <div class="menu-icon">🛒</div>
+            <span class="menu-text">商品管理</span>
+          </li>
+        </router-link>
         <router-link to="/system-settings" custom v-slot="{ navigate, isActive }">
           <li @click="navigate" :class="['menu-item', { active: isActive }]">
             <div class="menu-icon">⚙️</div>
