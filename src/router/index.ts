@@ -7,6 +7,7 @@ import UserManagement from '../views/UserManagement.vue';
 import RoleManagement from '../views/RoleManagement.vue';
 import SystemSettings from '../views/SystemSettings.vue';
 import ProductManagement from '../views/ProductManagement.vue';
+import OrderManagement from '../views/OrderManagement.vue';
 
 const routes = [
   {
@@ -32,6 +33,12 @@ const routes = [
     name: 'ProductManagement',
     component: ProductManagement,
     meta: { title: '商品管理' }
+  },
+  {
+    path: '/order-management',
+    name: 'OrderManagement',
+    component: OrderManagement,
+    meta: { title: '订单管理' }
   },
   {
     path: '/system-settings',
