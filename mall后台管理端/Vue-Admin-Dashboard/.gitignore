@@ -1,0 +1,53 @@
+# Node modules
+/back/node_modules/
+/node_modules/
+/data-cleaning-platform/node_modules/
+
+# IDE configuration files
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+
+# Build output
+/target/
+/dist/
+/build/
+/data-cleaning-platform/dist/
+
+# Log files
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Environment variables file
+.env*
+
+# Maven Wrapper
+!.mvn/wrapper/maven-wrapper.jar
+
+# Compiled output
+*.class
+
+# Package files
+*.jar
+*.war
+*.ear
+
+# Other specific ignores
+HELP.md
+.apt_generated
+.factorypath
+.springBeans
+.sts4-cache
+nbproject/private/
+nbbuild/
+nbdist/
+.nb-gradle/
+!**/src/main/**/target/
+!**/src/test/**/target/
+!**/src/main/**/build/
+!**/src/test/**/build/ 
