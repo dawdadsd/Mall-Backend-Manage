@@ -1,0 +1,83 @@
+spring:
+  application:
+    name: product-platform
+  datasource:
+    url: jdbc:mysql://localhost:3306/xiaowu_product?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          time_zone: Asia/Shanghai
+  cache:
+    type: redis
+  redis:
+    host: localhost
+    port: 6379
+    database: 0
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 100MB
+      
+server:
+  port: 8080
+  servlet:
+    context-path: /api/v1
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/plain,text/css,application/javascript
+    min-response-size: 1024
+
+# SpringDoc配置
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+    tagsSorter: alpha
+  packages-to-scan: com.mall.productplatform.interfaces.rest
+  
+# 日志配置
+logging:
+  level:
+    root: INFO
+    com.mall.productplatform: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+  file:
+    name: logs/product-platform.log
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+
+# 应用自定义配置
+mall:
+  product:
+    # 图片存储相关配置
+    image:
+      storage-path: /data/product/images
+      allowed-types: jpg,jpeg,png,gif
+      max-size: 5MB
+    # 库存管理配置
+    inventory:
+      low-threshold: 10
+      auto-notification: true
+    # 事件配置
+    event:
+      async-processing: true
+      thread-pool-size: 4
+      max-retry: 3 
