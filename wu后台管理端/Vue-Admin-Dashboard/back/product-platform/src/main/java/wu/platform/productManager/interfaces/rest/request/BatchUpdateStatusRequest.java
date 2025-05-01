@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -22,7 +23,7 @@ public class BatchUpdateStatusRequest {
      * 商品ID集合
      */
     @NotEmpty(message = "商品ID列表不能为空")
-    private Set<Long> ids;
+    private List<Long> ids;
 
     /**
      * 目标状态

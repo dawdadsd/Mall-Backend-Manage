@@ -4,6 +4,7 @@ import wu.platform.productManager.application.dto.query.CategoryDto;
 import wu.platform.productManager.domain.entity.Category;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
 import java.util.List;
 
@@ -20,7 +21,10 @@ public interface CategoryMapper {
      * @param category 分类实体
      * @return 分类DTO
      */
-    @Mapping(target = "isLeaf", expression = "java(category.getChildren() == null || category.getChildren().isEmpty())")
+    @Mappings({
+        @Mapping(target = "isLeaf", expression = "java(category.isLeaf())"),
+        @Mapping(target = "isEnabled", source = "enabled")
+    })
     CategoryDto toDto(Category category);
 
     /**

@@ -7,6 +7,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.time.Instant;
 
 /**
  * 商品分类实体
@@ -17,31 +18,51 @@ import java.util.Set;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
+@ToString(callSuper = true)
 public class Category extends BaseEntity {
 
-    @Column(name = "name", nullable = false)
+    /**
+     * 分类名称
+     */
+    @Column(name = "name", nullable = false, length = 50)
     private String name;
     
-    @Column(name = "code", nullable = false, unique = true)
+    /**
+     * 分类编码
+     */
+    @Column(name = "code", nullable = false, unique = true, length = 20)
     private String code;
     
-    @Column(name = "description")
+    /**
+     * 分类描述
+     */
+    @Column(name = "description", length = 500)
     private String description;
     
+    /**
+     * 分类级别
+     */
     @Column(name = "level")
     private Integer level;
     
+    /**
+     * 排序顺序
+     */
     @Column(name = "sort_order")
     private Integer sortOrder;
     
+    /**
+     * 图标URL
+     */
     @Column(name = "icon_url")
     private String iconUrl;
     
-    @Column(name = "is_enabled")
-    private Boolean isEnabled;
+    /**
+     * 是否启用
+     */
+    @Column(name = "is_enabled", nullable = false)
+    private boolean enabled = true;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
@@ -91,13 +112,13 @@ public class Category extends BaseEntity {
      * 启用分类
      */
     public void enable() {
-        this.isEnabled = true;
+        this.enabled = true;
     }
     
     /**
      * 禁用分类
      */
     public void disable() {
-        this.isEnabled = false;
+        this.enabled = false;
     }
 } 

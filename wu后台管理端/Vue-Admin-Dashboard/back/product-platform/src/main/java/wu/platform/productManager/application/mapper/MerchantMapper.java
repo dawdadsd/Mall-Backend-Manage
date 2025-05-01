@@ -3,6 +3,7 @@ package wu.platform.productManager.application.mapper;
 import wu.platform.productManager.application.dto.query.MerchantDto;
 import wu.platform.productManager.domain.entity.Merchant;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.List;
 
@@ -19,6 +20,8 @@ public interface MerchantMapper {
      * @param merchant 商家实体
      * @return 商家DTO
      */
+    @Mapping(source = "verified", target = "isVerified")
+    @Mapping(source = "enabled", target = "isEnabled")
     MerchantDto toDto(Merchant merchant);
 
     /**

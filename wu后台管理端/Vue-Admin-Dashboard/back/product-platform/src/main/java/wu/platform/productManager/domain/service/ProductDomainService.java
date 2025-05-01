@@ -4,7 +4,7 @@ import wu.platform.productManager.domain.entity.Product;
 import wu.platform.productManager.domain.entity.ProductSku;
 import wu.platform.productManager.domain.entity.ProductSpecification;
 import wu.platform.productManager.domain.vo.ProductStatus;
-
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -21,7 +21,7 @@ public interface ProductDomainService {
      * @param skus SKU列表
      * @return 创建后的商品实体
      */
-    Product createProductWithSpecsAndSkus(Product product, Set<ProductSpecification> specifications, Set<ProductSku> skus);
+    Product createProductWithSpecsAndSkus(Product product, List<ProductSpecification> specifications, List<ProductSku> skus);
 
     /**
      * 批量更新商品库存
@@ -31,7 +31,7 @@ public interface ProductDomainService {
      * @param skus 更新后的SKU列表
      * @return 更新后的商品实体
      */
-    Product updateProductInventory(Product product, Set<ProductSku> skus);
+    Product updateProductInventory(Product product, List<ProductSku> skus);
 
     /**
      * 检查商品是否可以上架
@@ -56,5 +56,5 @@ public interface ProductDomainService {
      * @param targetStatus 目标状态
      * @return 变更成功的商品数量
      */
-    int batchUpdateStatus(Set<Long> productIds, ProductStatus targetStatus);
+    int batchUpdateStatus(List<Long> productIds, ProductStatus targetStatus);
 } 

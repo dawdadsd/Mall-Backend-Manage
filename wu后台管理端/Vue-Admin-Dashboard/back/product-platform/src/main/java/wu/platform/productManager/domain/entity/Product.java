@@ -8,8 +8,10 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 商品实体类 - 领域模型的核心聚合根
@@ -23,148 +25,135 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = {"category", "merchant", "images", "attributes", "specifications", "skus"})
 public class Product extends BaseEntity {
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, length = 200)
     private String name;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id", nullable = false)
     private Category category;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "merchant_id")
+    @JoinColumn(name = "merchant_id", nullable = false)
     private Merchant merchant;
     
-    @Column(name = "price", nullable = false, precision = 19, scale = 2)
+    @Column(name = "price", nullable = false, precision = 10)
     private BigDecimal price;
     
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
-    private ProductStatus status;
-    
-    @Column(name = "description", columnDefinition = "TEXT")
+    @Lob
+    @Column(name = "description")
     private String description;
     
-    @Column(name = "inventory", nullable = false)
-    private Integer inventory;
-    
-    @Column(name = "sales")
-    private Integer sales;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false, length = 20)
+    private ProductStatus status;
     
     @Enumerated(EnumType.STRING)
-    @Column(name = "condition", nullable = false)
+    @Column(name = "`condition`", nullable = false, length = 20)
     private ProductCondition condition;
     
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "product_tags", joinColumns = @JoinColumn(name = "product_id"))
+    @Column(name = "tag")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    private Set<ProductImage> images = new HashSet<>();
+    @Builder.Default
+    private List<String> tags = new ArrayList<>();
     
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    private Set<ProductAttribute> attributes = new HashSet<>();
+    @OrderBy("sortOrder ASC")
+    @Builder.Default
+    private List<ProductImage> images = new ArrayList<>();
     
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    private Set<ProductSpecification> specifications = new HashSet<>();
+    @MapKey(name = "name")
+    @Builder.Default
+    private Map<String, ProductAttribute> attributes = new HashMap<>();
     
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    private Set<ProductSku> skus = new HashSet<>();
+    @Builder.Default
+    private List<ProductSpecification> specifications = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @Builder.Default
+    private List<ProductSku> skus = new ArrayList<>();
 
     /**
      * 领域逻辑：添加商品图片
      */
-    public Product addImage(ProductImage image) {
-        this.images.add(image);
+    public void addImage(String imageUrl, int sortOrder) {
+        ProductImage image = new ProductImage();
+        image.setImageUrl(imageUrl);
+        image.setSortOrder(sortOrder);
         image.setProduct(this);
-        return this;
+        this.images.add(image);
     }
     
     /**
      * 领域逻辑：移除商品图片
      */
-    public Product removeImage(ProductImage image) {
-        this.images.remove(image);
-        image.setProduct(null);
-        return this;
+    public void removeImage(String imageUrl) {
+        this.images.removeIf(img -> img.getImageUrl().equals(imageUrl));
     }
     
     /**
      * 领域逻辑：添加商品属性
      */
-    public Product addAttribute(ProductAttribute attribute) {
-        this.attributes.add(attribute);
+    public void addAttribute(String name, String value) {
+        ProductAttribute attribute = new ProductAttribute();
+        attribute.setName(name);
+        attribute.setValue(value);
         attribute.setProduct(this);
-        return this;
+        this.attributes.put(name, attribute);
+    }
+    
+    /**
+     * 领域逻辑：移除商品属性
+     */
+    public void removeAttribute(String name) {
+        this.attributes.remove(name);
     }
     
     /**
      * 领域逻辑：添加商品规格
      */
-    public Product addSpecification(ProductSpecification specification) {
-        this.specifications.add(specification);
+    public void addSpecification(ProductSpecification specification) {
         specification.setProduct(this);
-        return this;
+        this.specifications.add(specification);
+    }
+    
+    /**
+     * 领域逻辑：移除商品规格
+     */
+    public void removeSpecification(String name) {
+        this.specifications.removeIf(spec -> spec.getName().equals(name));
     }
     
     /**
      * 领域逻辑：添加SKU
      */
-    public Product addSku(ProductSku sku) {
-        this.skus.add(sku);
+    public void addSku(ProductSku sku) {
         sku.setProduct(this);
-        return this;
+        this.skus.add(sku);
     }
     
     /**
-     * 领域逻辑：上架商品
+     * 领域逻辑：移除SKU
      */
-    public void putOnSale() {
-        if (this.inventory <= 0) {
-            throw new IllegalStateException("库存容量小于0，不能上架");
-        }
-        this.status = ProductStatus.ON_SALE;
+    public void removeSku(String skuCode) {
+        this.skus.removeIf(sku -> sku.getSkuCode().equals(skuCode));
     }
-    
-    /**
-     * 领域逻辑：下架商品
-     */
-    public void takeOffSale() {
-        this.status = ProductStatus.OFF_SHELF;
-    }
-    
-    /**
-     * 领域逻辑：更新库存
-     */
-    public void updateInventory(int newInventory) {
-        if (newInventory < 0) {
-            throw new IllegalArgumentException("库存不能设置为小于0");
+
+    public void updateStatus(ProductStatus newStatus) {
+        if (newStatus == null) {
+            throw new IllegalArgumentException("状态不能为空");
         }
-        this.inventory = newInventory;
-        // 自动更新商品状态
-        if (newInventory == 0 && this.status == ProductStatus.ON_SALE) {
-            this.status = ProductStatus.SOLD_OUT;
-        } else if (newInventory > 0 && this.status == ProductStatus.SOLD_OUT) {
-            this.status = ProductStatus.ON_SALE;
-        }
-    }
-    
-    /**
-     * 领域逻辑：记录销售
-     */
-    public void recordSale(int quantity) {
-        if (quantity <= 0) {
-            throw new IllegalArgumentException("销售商品的数量不可能小于0");
-        }
-        if (this.inventory < quantity) {
-            throw new IllegalStateException("库存不足");
-        }
-        this.inventory -= quantity;
-        this.sales = (this.sales != null ? this.sales : 0) + quantity;
-        // 自动更新状态
-        if (this.inventory == 0) {
-            this.status = ProductStatus.SOLD_OUT;
-        }
+        // Add status transition validation logic if needed
+        this.status = newStatus;
     }
 } 

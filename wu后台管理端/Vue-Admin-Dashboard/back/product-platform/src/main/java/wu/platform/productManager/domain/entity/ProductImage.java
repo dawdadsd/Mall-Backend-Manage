@@ -17,20 +17,24 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = "product")
 public class ProductImage extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
     
-    @Column(name = "url", nullable = false)
-    private String url;
+    @Column(name = "image_url", nullable = false)
+    private String imageUrl;
     
     @Column(name = "sort_order")
-    private Integer sortOrder;
+    private Integer sortOrder = 0;
     
-    @Column(name = "is_primary")
-    private Boolean isPrimary;
+    @Column(name = "description")
+    private String description;
+    
+    @Column(name = "is_primary", nullable = false)
+    private boolean primary = false;
     
     @Column(name = "width")
     private Integer width;
@@ -48,14 +52,14 @@ public class ProductImage extends BaseEntity {
      * 设置为主图
      */
     public void setAsPrimary() {
-        this.isPrimary = true;
+        this.primary = true;
     }
     
     /**
      * 取消主图状态
      */
     public void unsetPrimary() {
-        this.isPrimary = false;
+        this.primary = false;
     }
     
     /**

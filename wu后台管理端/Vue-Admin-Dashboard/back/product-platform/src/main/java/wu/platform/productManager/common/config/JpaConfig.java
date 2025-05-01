@@ -14,7 +14,7 @@ import java.util.Optional;
  */
 @Configuration
 @EnableJpaAuditing(auditorAwareRef = "auditorProvider")
-@EnableJpaRepositories(basePackages = "com.mall.productplatform.infrastructure.repository.jpa")
+@EnableJpaRepositories(basePackages = "wu.platform.productManager.infrastructure.repository.jpa")
 public class JpaConfig {
 
     /**

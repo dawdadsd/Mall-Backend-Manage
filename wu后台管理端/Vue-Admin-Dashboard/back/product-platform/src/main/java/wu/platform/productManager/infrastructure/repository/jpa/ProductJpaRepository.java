@@ -5,6 +5,7 @@ import wu.platform.productManager.domain.vo.ProductStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -14,7 +15,7 @@ import java.util.List;
  * 商品JPA仓储接口
  * 提供基础的CRUD操作和自定义查询
  */
-public interface ProductJpaRepository extends JpaRepository<Product, Long> {
+public interface ProductJpaRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
 
     /**
      * 根据状态查询商品

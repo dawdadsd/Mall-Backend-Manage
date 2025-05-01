@@ -1,6 +1,9 @@
 package wu.platform.productManager.domain.repository;
 
 import wu.platform.productManager.domain.entity.Category;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,6 +12,7 @@ import java.util.Optional;
  * 商品分类仓储接口
  * 定义领域模型 Category 的持久化和检索能力
  */
+@Repository
 public interface CategoryRepository {
 
     /**
@@ -30,6 +34,13 @@ public interface CategoryRepository {
      * @return 分类列表
      */
     List<Category> findAll();
+    
+    /**
+     * 分页查询所有分类
+     * @param pageable 分页参数
+     * @return 分类分页结果
+     */
+    Page<Category> findAll(Pageable pageable);
 
     /**
      * 查找所有顶级分类（没有父分类的分类）

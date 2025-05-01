@@ -4,6 +4,8 @@ import wu.platform.productManager.domain.entity.Category;
 import wu.platform.productManager.domain.repository.CategoryRepository;
 import wu.platform.productManager.infrastructure.repository.jpa.CategoryJpaRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -32,6 +34,11 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     @Override
     public List<Category> findAll() {
         return categoryJpaRepository.findAll();
+    }
+    
+    @Override
+    public Page<Category> findAll(Pageable pageable) {
+        return categoryJpaRepository.findAll(pageable);
     }
 
     @Override

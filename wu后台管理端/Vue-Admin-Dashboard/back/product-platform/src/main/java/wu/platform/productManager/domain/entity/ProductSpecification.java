@@ -5,12 +5,12 @@ import lombok.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * 商品规格实体类
- * 如颜色、尺寸等规格维度
+ * 商品规格实体
+ * 代表商品的某个规格，例如"颜色"、"尺寸"
  */
 @Entity
 @Table(name = "product_specifications")
@@ -20,59 +20,42 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = {"product", "values"})
 public class ProductSpecification extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
     
-    @Column(name = "name", nullable = false)
+    /**
+     * 规格名称 (例如: 颜色)
+     */
+    @Column(name = "name", nullable = false, length = 50)
     private String name;
     
-    @Column(name = "value", nullable = false)
-    private String value;
-    
-    @Column(name = "sort")
-    private Integer sort;
-    
-    @Column(name = "is_required")
-    private Boolean isRequired;
-    
-    @OneToMany(mappedBy = "specification", cascade = CascadeType.ALL, orphanRemoval = true)
+    /**
+     * 规格值列表 (例如: 红色, 蓝色)
+     * 使用 OneToMany 关联 SpecificationValue 实体
+     */
+    @OneToMany(mappedBy = "specification", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @OrderBy("sort ASC")
-    private Set<SpecificationValue> values = new HashSet<>();
+    @Builder.Default
+    private List<SpecificationValue> values = new ArrayList<>();
     
     /**
      * 添加规格值
      */
-    public ProductSpecification addValue(SpecificationValue value) {
-        values.add(value);
-        value.setSpecification(this);
-        return this;
+    public void addValue(String value) {
+        SpecificationValue specValue = new SpecificationValue();
+        specValue.setValue(value);
+        specValue.setSpecification(this);
+        this.values.add(specValue);
     }
     
     /**
      * 移除规格值
      */
-    public ProductSpecification removeValue(SpecificationValue value) {
-        values.remove(value);
-        value.setSpecification(null);
-        return this;
-    }
-    
-    /**
-     * 设置为必选规格
-     */
-    public void setAsRequired() {
-        this.isRequired = true;
-    }
-    
-    /**
-     * 设置值
-     * @param value 规格值
-     */
-    public void setValues(String value) {
-        this.value = value;
+    public void removeValue(String value) {
+        this.values.removeIf(v -> v.getValue().equals(value));
     }
 }

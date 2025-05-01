@@ -112,4 +112,25 @@ public interface ProductRepository {
      * @return 商品分页结果
      */
     Page<Product> findByNameContaining(String name, Pageable pageable);
+
+    /**
+     * 根据ID列表查询商品
+     * 
+     * @param ids 商品ID列表
+     * @return 商品列表
+     */
+    List<Product> findAllById(Iterable<Long> ids);
+
+    /**
+     * 根据复杂条件分页查询商品
+     * (具体实现可能需要JPA Specification或QueryDSL)
+     * 
+     * @param categoryId 分类ID (可为null)
+     * @param merchantId 商家ID (可为null)
+     * @param status 商品状态 (可为null)
+     * @param keyword 关键词 (可为null)
+     * @param pageable 分页参数
+     * @return 商品分页结果
+     */
+    Page<Product> findByCriteria(Long categoryId, Long merchantId, ProductStatus status, String keyword, Pageable pageable);
 } 

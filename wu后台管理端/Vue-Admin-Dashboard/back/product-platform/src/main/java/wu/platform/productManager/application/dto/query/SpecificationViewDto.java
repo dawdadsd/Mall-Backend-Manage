@@ -31,6 +31,7 @@ public class SpecificationViewDto {
     /**
      * 规格值列表
      */
+    @Builder.Default
     private List<SpecValueDto> values = new ArrayList<>();
 
     /**

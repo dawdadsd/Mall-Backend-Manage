@@ -6,6 +6,7 @@ import wu.platform.productManager.domain.vo.ProductStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -55,11 +56,11 @@ public interface ProductApplicationService {
     /**
      * 批量更新商品状态
      * 
-     * @param ids 商品ID集合
+     * @param ids 商品ID列表
      * @param status 目标状态
      * @return 成功更新的商品数量
      */
-    int batchUpdateProductStatus(Set<Long> ids, ProductStatus status);
+    int batchUpdateProductStatus(List<Long> ids, ProductStatus status);
 
     /**
      * 删除商品
