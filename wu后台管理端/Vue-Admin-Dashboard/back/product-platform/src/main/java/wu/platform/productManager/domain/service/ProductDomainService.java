@@ -15,7 +15,6 @@ public interface ProductDomainService {
 
     /**
      * 创建商品及其关联的规格和SKU
-     * 
      * @param product 商品实体
      * @param specifications 规格列表
      * @param skus SKU列表

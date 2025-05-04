@@ -64,9 +64,7 @@ public class ProductApplicationServiceImpl implements ProductApplicationService 
             command.getSpecifications().forEach(specCommand -> {
                 ProductSpecification spec = productMapper.specCommandToEntity(specCommand);
                 // Manually add values for the specification
-                specCommand.getValues().forEach(value -> {
-                     spec.addValue(value);
-                });
+                specCommand.getValues().forEach(spec::addValue);
                 product.addSpecification(spec); // Add spec to product
             });
         }

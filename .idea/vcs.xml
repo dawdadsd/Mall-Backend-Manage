@@ -3,5 +3,7 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/Bank_Clean_Tool" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/wu" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/wu/Vue-Admin-Dashboard/data-cleaning-platform" vcs="Git" />
   </component>
 </project>

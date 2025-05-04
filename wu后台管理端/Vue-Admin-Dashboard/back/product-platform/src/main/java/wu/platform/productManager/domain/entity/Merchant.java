@@ -5,7 +5,6 @@ import lombok.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import wu.platform.productManager.domain.vo.MerchantCreditLevel;
-import java.time.Instant;
 
 /**
  * 商家实体类
