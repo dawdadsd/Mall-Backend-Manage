@@ -1,10 +1,10 @@
 spring:
   ai:
     openai:
-      api-key: xai-r2DwFSrxIjHCxbelUrNM2K6Le69MRYu63w9iNAgNR5sk2Ktnlkj5PQ58NiljdwmEcP5zPZQPhc0CcJQ5
-      base-url: https://api.x.ai
+      api-key: sk-iQj85JyXpM1qe2sLTr6COh4cmxIiA5D2RUjdUOnoS3RgUXTl
+      base-url: http://sonetto.top/v1
       chat:
         options:
-          model: grok-3-beta
-        completions-path: /v1/chat/completions
+          model: gemini-2.5-pro-preview-05-06
+        completions-path: /chat/completions
         
