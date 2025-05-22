@@ -9,8 +9,8 @@
           <div :class="['stat-trend', overviewStats.newProductsToday > 0 ? 'trend-up' : '']">
             <el-icon v-if="overviewStats.newProductsToday > 0"><Top /></el-icon>
             今日新增 {{ overviewStats.newProductsToday }}
-          </div>
-        </el-card>
+        </div>
+      </el-card>
       </el-col>
       <el-col :xs="24" :sm="12" :md="6">
         <el-card shadow="never" class="stat-card">
@@ -19,8 +19,8 @@
            <div :class="['stat-trend', overviewStats.newUsersToday > 0 ? 'trend-up' : '']">
              <el-icon v-if="overviewStats.newUsersToday > 0"><Top /></el-icon>
             今日新增 {{ overviewStats.newUsersToday }}
-           </div>
-        </el-card>
+        </div>
+      </el-card>
       </el-col>
       <el-col :xs="24" :sm="12" :md="6">
         <el-card shadow="never" class="stat-card">
@@ -30,8 +30,8 @@
               <el-icon v-if="overviewStats.orderChangePercent > 0"><Top /></el-icon>
               <el-icon v-else-if="overviewStats.orderChangePercent < 0"><Bottom /></el-icon>
               {{ overviewStats.orderChangePercent > 0 ? '↑' : (overviewStats.orderChangePercent < 0 ? '↓' : '') }} {{ Math.abs(overviewStats.orderChangePercent) }}% vs 昨日
-           </div>
-        </el-card>
+        </div>
+      </el-card>
       </el-col>
       <el-col :xs="24" :sm="12" :md="6">
         <el-card shadow="never" class="stat-card">
@@ -39,7 +39,7 @@
           <div class="stat-value">{{ overviewStats.pendingItems }}</div>
           <div class="stat-trend" style="font-size: 12px; color: #909399;">
             (商品审核, 纠纷, 清洗任务)
-          </div>
+    </div>
         </el-card>
       </el-col>
     </el-row>
@@ -52,7 +52,7 @@
             <span>商品分类分布</span>
           </div>
           <div class="chart-container" ref="categoryChartRef" />
-        </el-card>
+      </el-card>
       </el-col>
       <el-col :xs="24" :md="12">
         <el-card shadow="never" class="chart-card">
@@ -60,7 +60,7 @@
             <span>近7日活跃用户/商家</span>
           </div>
           <div class="chart-container" ref="activityChartRef" />
-        </el-card>
+      </el-card>
       </el-col>
     </el-row>
 
@@ -72,22 +72,22 @@
               <div class="card-header">
                 <span>最近上新商品</span>
                 <el-button type="primary" link>查看全部</el-button>
-              </div>
+      </div>
             </template>
             <el-table :data="recentProducts" style="width: 100%">
               <el-table-column label="商品图" width="70">
                  <template #default="{ row }">
                     <el-image :src="row.image" fit="cover" style="width: 40px; height: 40px; border-radius: 4px;" />
-                 </template>
-              </el-table-column>
+          </template>
+        </el-table-column>
               <el-table-column prop="name" label="名称" show-overflow-tooltip />
               <el-table-column prop="category" label="分类" width="100" />
               <el-table-column prop="price" label="价格" width="100">
                  <template #default="{ row }">￥{{ row.price.toFixed(2) }}</template>
-              </el-table-column>
+        </el-table-column>
               <el-table-column prop="seller" label="卖家" width="120" />
               <el-table-column prop="time" label="上架时间" width="160" />
-            </el-table>
+      </el-table>
          </el-card>
        </el-col>
        <el-col :xs="24" :md="8">
@@ -111,7 +111,7 @@
                     <span class="brief-value warning">{{ cleaningBrief.errorCount }}</span>
                  </div>
                   <el-button type="primary" plain style="width: 100%; margin-top: 15px;">查看清洗中心</el-button>
-              </div>
+    </div>
           </el-card>
        </el-col>
      </el-row>
@@ -251,7 +251,7 @@ onMounted(() => {
   nextTick(() => { // Ensure DOM is ready
     initCategoryChart();
     initActivityChart();
-  });
+});
 });
 
 </script>
@@ -299,7 +299,7 @@ onMounted(() => {
 
 .chart-card {
    border: none;
-   border-radius: 8px;
+  border-radius: 8px;
    height: 350px; /* Ensure cards have same height */
    display: flex;
    flex-direction: column;
@@ -325,7 +325,7 @@ onMounted(() => {
 
 .list-section .el-card {
     border: none;
-    border-radius: 8px;
+  border-radius: 8px;
 }
 
 .el-table :deep(th) {

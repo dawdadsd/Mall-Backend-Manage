@@ -28,7 +28,7 @@
           <li @click="navigate" :class="['menu-item', { active: isActive }]">
             <div class="menu-icon">🛡️</div>
             <span class="menu-text">商品质量管理</span>
-          </li>
+        </li>
         </router-link>
       </ul>
 
